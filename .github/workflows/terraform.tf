@@ -84,6 +84,33 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.6.0
+
+    - name: Terraform Init
+      run: terraform init
+      working-directory: ./terraform  # <-- change this if your files are elsewhere
+
+    - name: Terraform Plan
+      run: terraform plan -input=false
+      working-directory: ./terraform  # <-- make sure this matches where your .tf files are
+
       run: terraform plan -input=false
 
       # On push to "main", build or change infrastructure according to Terraform configuration files
